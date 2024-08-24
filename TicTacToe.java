@@ -41,12 +41,28 @@ public class TicTacToe {
   // Print the board
   public static void printBoard() {
     System.out.println("Current board:");
+    printTopRow();
+
     for (int i = 0; i < boardSize; i++) {
+      System.out.print((i + 1) + "|");
       for (int j = 0; j < boardSize; j++) {
         System.out.print(board[i][j] + " ");
       }
       System.out.println();
     }
+  }
+
+  public static void printTopRow() {
+    System.out.print("  ");
+    for (int i = 0; i < boardSize; i++) {
+      System.out.print(i + 1 + " ");
+    }
+    System.out.println();
+    System.out.print("  ");
+    for (int i = 0; i < boardSize; i++) {
+      System.out.print("_ ");
+    }
+    System.out.println();
   }
 
   // Switch the player
@@ -63,8 +79,8 @@ public class TicTacToe {
 
       while (true) {
         System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
-        row = scanner.nextInt();
-        col = scanner.nextInt();
+        row = scanner.nextInt() - 1;
+        col = scanner.nextInt() - 1;
 
         if (row >= 0 && row < boardSize && col >= 0 && col < boardSize && board[row][col] == '-') {
           board[row][col] = currentPlayer;
