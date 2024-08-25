@@ -16,10 +16,10 @@ public class TicTacToe {
     Scanner scanner = new Scanner(System.in);
 
     while (true) {
-      System.out.println("Give the board size (between 3 and 10): ");
+      System.out.println("Give the board size (between 3 and 9): ");
       boardSize = scanner.nextInt();
 
-      if (boardSize < 3 || boardSize > 10) {
+      if (boardSize < 3 || boardSize > 9) {
         System.out.println("The size is too small or too big.");
       } else {
         break;
