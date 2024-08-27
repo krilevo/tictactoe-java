@@ -11,13 +11,28 @@ public class TicTacToe {
     playGame();
   }
 
+  public static int getValidInput(Scanner scanner, String prompt) {
+    int input;
+    while (true) {
+      System.out.print(prompt);
+
+      if (scanner.hasNextInt()) {
+        input = scanner.nextInt();
+        break;
+      } else {
+        System.out.println("Invalid input. Please enter an integer.");
+        scanner.next(); // Discard invalid input
+      }
+    }
+    return input;
+  }
+
   // Get the board size from the user
   public static void getBoardSize() {
     Scanner scanner = new Scanner(System.in);
 
     while (true) {
-      System.out.println("Give the board size (between 3 and 9): ");
-      boardSize = scanner.nextInt();
+      boardSize = getValidInput(scanner, "Give the board size (between 3 and 9): ");
 
       if (boardSize < 3 || boardSize > 9) {
         System.out.println("The size is too small or too big.");
@@ -79,8 +94,8 @@ public class TicTacToe {
 
       while (true) {
         System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
-        row = scanner.nextInt() - 1;
-        col = scanner.nextInt() - 1;
+        row = getValidInput(scanner, "Enter row: ") - 1;
+        col = getValidInput(scanner, "Enter column: ") - 1;
 
         if (row >= 0 && row < boardSize && col >= 0 && col < boardSize && board[row][col] == '-') {
           board[row][col] = currentPlayer;
