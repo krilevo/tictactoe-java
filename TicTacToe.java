@@ -13,6 +13,7 @@ public class TicTacToe {
     initializeBoard();
     printBoard();
     playGame();
+    scanner.close();
   }
 
   public static void checkIfPlayingAgainstCPU() {
