@@ -4,11 +4,33 @@ public class TicTacToe {
   private static int boardSize;
   private static char[][] board;
   private static char currentPlayer = 'X';
+  private static boolean isPlayingAgainstCPU = false;
   public static void main(String[] args) {
+    
+    checkIfPlayingAgainstCPU();
     getBoardSize();
     initializeBoard();
     printBoard();
     playGame();
+  }
+
+  public static void checkIfPlayingAgainstCPU() {
+    Scanner scanner = new Scanner(System.in);
+
+    while (true) {
+      System.out.println("Do you want to play against CPU? (yes/no): ");
+      String opponentChoice = scanner.next().toLowerCase();
+
+      if (opponentChoice.equals("yes") || opponentChoice.equals("y")) {
+        isPlayingAgainstCPU = true;
+        break;
+      } else if (opponentChoice.equals("no") || opponentChoice.equals("n")) {
+        isPlayingAgainstCPU = false;
+        break;
+      } else {
+        System.out.println("Invalid input.");
+      }
+    }
   }
 
   public static int getValidInput(Scanner scanner, String prompt) {
@@ -90,19 +112,10 @@ public class TicTacToe {
     Scanner scanner = new Scanner(System.in);
 
     while (!gameEnded) {
-      int row, col;
-
-      while (true) {
-        System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
-        row = getValidInput(scanner, "Enter row: ") - 1;
-        col = getValidInput(scanner, "Enter column: ") - 1;
-
-        if (row >= 0 && row < boardSize && col >= 0 && col < boardSize && board[row][col] == '-') {
-          board[row][col] = currentPlayer;
-          break;
-        } else {
-          System.out.println("Invalid move!");
-        }
+      if (isPlayingAgainstCPU && currentPlayer == 'O') {
+        makeCPUMove();
+      } else {
+        makeHumanMove(scanner);
       }
 
       printBoard();
@@ -119,6 +132,38 @@ public class TicTacToe {
     }
 
     scanner.close();
+  }
+
+  public static void makeHumanMove(Scanner scanner) {
+    int row, col;
+
+    while (true) {
+      System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
+      row = getValidInput(scanner, "Enter row: ") - 1;
+      col = getValidInput(scanner, "Enter column: ") - 1;
+
+      if (row >= 0 && row < boardSize && col >= 0 && col < boardSize && board[row][col] == '-') {
+        board[row][col] = currentPlayer;
+        break;
+      } else {
+        System.out.println("Invalid move!");
+      }
+    }
+  }
+
+  public static void makeCPUMove() {
+    System.out.println("CPU is making a move...");
+    int row, col;
+
+    while (true) {
+      row = (int) (Math.random() * boardSize);
+      col = (int) (Math.random() * boardSize);
+
+      if (board[row][col] == '-') {
+        board[row][col] = currentPlayer;
+        break;
+      }
+    }
   }
 
   public static boolean checkForWin() {
