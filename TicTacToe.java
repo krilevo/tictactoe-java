@@ -5,6 +5,7 @@ public class TicTacToe {
   private static char[][] board;
   private static char currentPlayer = 'X';
   private static boolean isPlayingAgainstCPU = false;
+  private static Scanner scanner = new Scanner(System.in);
   public static void main(String[] args) {
     
     checkIfPlayingAgainstCPU();
@@ -15,8 +16,6 @@ public class TicTacToe {
   }
 
   public static void checkIfPlayingAgainstCPU() {
-    Scanner scanner = new Scanner(System.in);
-
     while (true) {
       System.out.println("Do you want to play against CPU? (yes/no): ");
       String opponentChoice = scanner.next().toLowerCase();
@@ -33,7 +32,7 @@ public class TicTacToe {
     }
   }
 
-  public static int getValidInput(Scanner scanner, String prompt) {
+  public static int getValidInput(String prompt) {
     int input;
     while (true) {
       System.out.print(prompt);
@@ -51,10 +50,8 @@ public class TicTacToe {
 
   // Get the board size from the user
   public static void getBoardSize() {
-    Scanner scanner = new Scanner(System.in);
-
     while (true) {
-      boardSize = getValidInput(scanner, "Give the board size (between 3 and 9): ");
+      boardSize = getValidInput("Give the board size (between 3 and 9): ");
 
       if (boardSize < 3 || boardSize > 9) {
         System.out.println("The size is too small or too big.");
@@ -109,13 +106,12 @@ public class TicTacToe {
 
   public static void playGame() {
     boolean gameEnded = false;
-    Scanner scanner = new Scanner(System.in);
 
     while (!gameEnded) {
       if (isPlayingAgainstCPU && currentPlayer == 'O') {
         makeCPUMove();
       } else {
-        makeHumanMove(scanner);
+        makeHumanMove();
       }
 
       printBoard();
@@ -130,17 +126,15 @@ public class TicTacToe {
         switchPlayer();
       }
     }
-
-    scanner.close();
   }
 
-  public static void makeHumanMove(Scanner scanner) {
+  public static void makeHumanMove() {
     int row, col;
 
     while (true) {
       System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
-      row = getValidInput(scanner, "Enter row: ") - 1;
-      col = getValidInput(scanner, "Enter column: ") - 1;
+      row = getValidInput("Enter row: ") - 1;
+      col = getValidInput("Enter column: ") - 1;
 
       if (row >= 0 && row < boardSize && col >= 0 && col < boardSize && board[row][col] == '-') {
         board[row][col] = currentPlayer;
