@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class TicTacToe {
@@ -148,16 +150,98 @@ public class TicTacToe {
 
   public static void makeCPUMove() {
     System.out.println("CPU is making a move...");
-    int row, col;
 
-    while (true) {
-      row = (int) (Math.random() * boardSize);
-      col = (int) (Math.random() * boardSize);
+    // Try to win
+    if (attemptCriticalMove('O')) {
+      return; // Winning move made, exit
+    }
 
-      if (board[row][col] == '-') {
-        board[row][col] = currentPlayer;
-        break;
+    // Try to block the player from winning
+    if (attemptCriticalMove('X')) {
+      return; // Blocking move made, exit
+    }
+
+    // Fallback to a random move
+    makeRandomMove();
+  }
+
+  // Attempts to make a winning or blocking move based on the specified playerMark
+  public static boolean attemptCriticalMove(char playerMark) {
+    // Check rows
+    for (int i = 0; i < boardSize; i++) {
+      int indexOfEmptySpot = findCriticalMove(i, 0, 0, 1, playerMark);
+      if (indexOfEmptySpot != -1) {
+        board[i][indexOfEmptySpot] = 'O';
+        return true;
       }
+    }
+
+    // Check columns
+    for (int j = 0; j < boardSize; j++) {
+      int indexOfEmptySpot = findCriticalMove(0, j, 1, 0, playerMark);
+      if (indexOfEmptySpot != -1) {
+        board[indexOfEmptySpot][j] = 'O';
+        return true;
+      }
+    }
+
+    // Check main diagonal
+    int mainDiagIndex = findCriticalMove(0, 0, 1, 1, playerMark);
+    if (mainDiagIndex != -1) {
+      board[mainDiagIndex][mainDiagIndex] = 'O';
+      return true;
+    }
+
+    // Check anti-diagonal
+    int antiDiagIndex = findCriticalMove(0, boardSize - 1, 1, -1, playerMark);
+    if (antiDiagIndex != -1) {
+      board[antiDiagIndex][boardSize - antiDiagIndex - 1] = 'O';
+      return true;
+    }
+
+    return false;
+  }
+
+  // Finds a critical move on a line (row, column, or diagonal)
+  public static int findCriticalMove(int startRow, int startCol, int rowIncrement, int colIncrement, char playerMark) {
+    int marks = 0;
+    int emptyRow = -1;
+    int emptyCol = -1;
+
+    for (int i = 0; i < boardSize; i++) {
+      int row = startRow + i * rowIncrement;
+      int col = startCol + i * colIncrement;
+
+      if (board[row][col] == playerMark) {
+        marks++;
+      } else if (board[row][col] == '-') {
+        emptyRow = row;
+        emptyCol = col;
+      }
+    }
+
+    // Ensure only one empty spot exists and we're about to win/block
+    if (marks == boardSize - 1 && emptyRow != -1 && emptyCol != -1) {
+      return rowIncrement == 0 ? emptyCol : emptyRow;
+    }
+
+    return -1; // No critical move found
+  }
+
+  // Makes a random move
+  public static void makeRandomMove() {
+    List<int[]> emptySpots = new ArrayList<>();
+    for (int i = 0; i < boardSize; i++) {
+      for (int j = 0; j < boardSize; j++) {
+        if (board[i][j] == '-') {
+          emptySpots.add(new int[]{i, j});
+        }
+      }
+    }
+
+    if (!emptySpots.isEmpty()) {
+      int[] spot = emptySpots.get((int) (Math.random() * emptySpots.size()));
+      board[spot[0]][spot[1]] = 'O';
     }
   }
 
